@@ -1,6 +1,6 @@
-# **StikAppStorage**
+# **StikAppStorage (WIP)**
 
-StikAppStorage is a simplified and lightweight SwiftUI property wrapper that makes working with persistent storage (`UserDefaults`) easier and more readable. It provides a clean, SwiftUI-compatible solution for storing and retrieving values seamlessly.
+StikAppStorage is a work in progress simplified and lightweight SwiftUI property wrapper that makes working with persistent storage (`UserDefaults`) easier and more readable. It provides a clean, SwiftUI-compatible solution for storing and retrieving values seamlessly.
 
 ---
 
@@ -26,7 +26,7 @@ StikAppStorage is a simplified and lightweight SwiftUI property wrapper that mak
 
 ## **Usage**
 
-### **1. Basic Example**
+### **Basic Example**
 
 Simply use `@StikAppStorage` to persist values with a key and default value.
 
@@ -50,36 +50,6 @@ struct ContentView: View {
 
 - The value of `username` is stored in `UserDefaults` using the key `"username"`.
 - Changes to `username` will automatically persist and update the UI.
-
----
-
-### **2. Storing Different Data Types**
-
-StikAppStorage supports multiple data types like `String`, `Int`, `Bool`, and more.
-
-```swift
-import SwiftUI
-import StikAppStorage
-
-struct SettingsView: View {
-    @StikAppStorage("isDarkMode") var isDarkMode: Bool = false
-    @StikAppStorage("launchCount") var launchCount: Int = 0
-
-    var body: some View {
-        VStack {
-            Toggle("Dark Mode", isOn: $isDarkMode)
-            Text("Launch Count: \(launchCount)")
-            Button("Increment Launch Count") {
-                launchCount += 1
-            }
-        }
-        .padding()
-    }
-}
-```
-
-- Supports both simple and complex types (using `Codable` if needed).
-- All changes are instantly reflected in the app.
 
 ---
 
