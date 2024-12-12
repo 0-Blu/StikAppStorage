@@ -1,37 +1,37 @@
 # **StikAppStorage**
 
-A lightweight SwiftUI property wrapper that simplifies persistent storage using `UserDefaults`. StikAppStorage includes built-in **JSON support** for saving and retrieving any `Codable` types, making it perfect for both simple and complex data.
+A powerful SwiftUI property wrapper that simplifies persistent storage using `UserDefaults`. With built-in **JSON support**, `StikAppStorage` allows you to store both simple types (`String`, `Int`, `Bool`, etc.) and custom `Codable` types seamlessly.
 
 ---
 
 ## **Features**
-- **Simplified AppStorage**: Easy to use with minimal code.
-- **JSON Support**: Store custom `Codable` types in `UserDefaults`.
-- **Default Values**: Provide a fallback if no data exists.
-- **SwiftUI Compatibility**: Works seamlessly with SwiftUI bindings.
+- **Simplified Persistent Storage**: Works just like `AppStorage` but with added functionality.
+- **JSON Support**: Store custom `Codable` types, like structs and enums.
+- **Fallback Defaults**: Provides a fallback value if no data exists or decoding fails.
+- **SwiftUI Integration**: Fully compatible with SwiftUI's reactive system.
 
 ---
 
 ## **Installation**
 
-### **Swift Package Manager**
-Add the following dependency in your project:
+### Swift Package Manager
 
-1. Go to **Xcode** → **File** → **Swift Packages** → **Add Package Dependency**.
-2. Enter the URL to your package repository.
+1. In Xcode, go to **File** → **Swift Packages** → **Add Package Dependency**.
+2. Enter the repository URL:
 
-For example:
-```bash
-https://github.com/0-Blu/StikAppStorage
-```
+   ```bash
+   https://github.com/0-Blu/StikAppStorage
+   ```
+
+3. Select the latest version and add the package to your project.
 
 ---
 
 ## **Usage**
 
-### **1. Basic Types**
+### **1. Storing Basic Types**
 
-Storing simple types like `String`, `Bool`, or `Int` is effortless:
+Easily store and retrieve simple types, like `String`, `Int`, or `Bool`:
 
 ```swift
 import StikAppStorage
@@ -58,9 +58,9 @@ struct ContentView: View {
 
 ---
 
-### **2. Custom Codable Types**
+### **2. Storing Custom Codable Types**
 
-You can store any type conforming to `Codable`:
+You can store any custom type that conforms to `Codable`. Here's an example with a `UserProfile` struct:
 
 ```swift
 import StikAppStorage
@@ -72,68 +72,44 @@ struct UserProfile: Codable {
 }
 
 struct ContentView: View {
-    @StikAppStorage("userProfile") var userProfile = UserProfile(name: "John Doe", age: 25)
-
+    @StikAppStorage("userProfile") private var userProfile = UserProfile(name: "John Doe", age: 25)
+    
     var body: some View {
         VStack {
             Text("Name: \(userProfile.name)")
             Text("Age: \(userProfile.age)")
             
             Button("Update Profile") {
-                userProfile = UserProfile(name: "Jane Doe", age: 30)
+                $userProfile.wrappedValue = UserProfile(name: "Jane Doe", age: 30)
             }
         }
         .padding()
     }
 }
+
 ```
 
 ---
 
-### **3. Default Values**
+### **3. Default Fallback**
 
-If no value exists in `UserDefaults`, the property will fall back to the provided default:
+If no data exists for a given key, the default value provided in `@StikAppStorage` is used:
 
 ```swift
-@StikAppStorage("isLoggedIn") var isLoggedIn = false
 @StikAppStorage("launchCount") var launchCount = 0
+@StikAppStorage("isLoggedIn") var isLoggedIn = false
 ```
 
 ---
 
 ## **How It Works**
 
-- `StikAppStorage` automatically **encodes** and **decodes** values to/from JSON.
-- Simple values (`String`, `Int`, `Bool`, etc.) are saved as-is.
-- Complex types (e.g., structs) are encoded using `JSONEncoder` and stored as `Data` in `UserDefaults`.
-
----
-
-## **Testing**
-
-Unit tests ensure the property wrapper behaves as expected, including for custom types:
-
-```swift
-struct TestStruct: Codable, Equatable {
-    let title: String
-    let value: Int
-}
-
-@StikAppStorage("testStructKey") var testValue = TestStruct(title: "Default", value: 0)
-```
-
----
-
-## **Contributing**
-
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b new-feature`.
-3. Commit your changes: `git commit -m "Add feature"`.
-4. Push to the branch: `git push origin new-feature`.
-5. Open a Pull Request.
+1. **Simple Types**: Stored directly into `UserDefaults`.
+2. **Custom Types**: Encoded into JSON using `JSONEncoder` and saved as `Data` in `UserDefaults`.
+3. **Decoding**: Automatically decoded back into the original type using `JSONDecoder`.
 
 ---
 
 ## **License**
 
-StikAppStorage is licensed under the **MIT License**. See the LICENSE file for more information.
+`StikAppStorage` is available under the **MIT License**. See the LICENSE file for more details.
