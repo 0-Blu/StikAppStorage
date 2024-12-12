@@ -3,30 +3,29 @@
 
 import SwiftUI
 
-/// A simplified AppStorage property wrapper with JSON and custom type support.
+/// A property wrapper for persistent storage using UserDefaults with JSON support.
 @propertyWrapper
 public struct StikAppStorage<Value: Codable>: DynamicProperty {
     private let key: String
     private let defaultValue: Value
     @State private var storageValue: Value
 
-    /// Initializes StikAppStorage with a key and a default value.
-    /// - Parameters:
-    ///   - wrappedValue: Default value when no data exists for the key.
-    ///   - key: The key to store the value in UserDefaults.
+    /// Initializes the StikAppStorage wrapper.
     public init(wrappedValue: Value, _ key: String) {
         self.key = key
         self.defaultValue = wrappedValue
+
+        // Retrieve and decode the value from UserDefaults, or use the default.
         if let data = UserDefaults.standard.data(forKey: key),
            let decodedValue = try? JSONDecoder().decode(Value.self, from: data) {
-            self._storageValue = State(initialValue: decodedValue)
+            _storageValue = State(initialValue: decodedValue)
         } else {
-            self._storageValue = State(initialValue: wrappedValue)
+            _storageValue = State(initialValue: wrappedValue)
             saveToUserDefaults(wrappedValue)
         }
     }
 
-    /// Accesses the stored value.
+    /// The stored value.
     public var wrappedValue: Value {
         get { storageValue }
         set {
@@ -34,8 +33,8 @@ public struct StikAppStorage<Value: Codable>: DynamicProperty {
             saveToUserDefaults(newValue)
         }
     }
-    
-    /// Provides a binding for SwiftUI compatibility.
+
+    /// Provides a SwiftUI Binding for compatibility.
     public var projectedValue: Binding<Value> {
         Binding(
             get: { self.storageValue },
@@ -45,8 +44,8 @@ public struct StikAppStorage<Value: Codable>: DynamicProperty {
             }
         )
     }
-    
-    /// Saves the value to UserDefaults, encoding it to JSON.
+
+    /// Encodes and saves the value to UserDefaults.
     private func saveToUserDefaults(_ value: Value) {
         if let encoded = try? JSONEncoder().encode(value) {
             UserDefaults.standard.set(encoded, forKey: key)
