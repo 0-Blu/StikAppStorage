@@ -3,9 +3,9 @@
 
 import SwiftUI
 
-/// A simplified AppStorage property wrapper to make persistent storage easier.
+/// A simplified AppStorage property wrapper with JSON and custom type support.
 @propertyWrapper
-public struct StikAppStorage<Value>: DynamicProperty {
+public struct StikAppStorage<Value: Codable>: DynamicProperty {
     private let key: String
     private let defaultValue: Value
     @State private var storageValue: Value
@@ -17,15 +17,21 @@ public struct StikAppStorage<Value>: DynamicProperty {
     public init(wrappedValue: Value, _ key: String) {
         self.key = key
         self.defaultValue = wrappedValue
-        self._storageValue = State(initialValue: UserDefaults.standard.object(forKey: key) as? Value ?? wrappedValue)
+        if let data = UserDefaults.standard.data(forKey: key),
+           let decodedValue = try? JSONDecoder().decode(Value.self, from: data) {
+            self._storageValue = State(initialValue: decodedValue)
+        } else {
+            self._storageValue = State(initialValue: wrappedValue)
+            saveToUserDefaults(wrappedValue)
+        }
     }
-    
+
     /// Accesses the stored value.
     public var wrappedValue: Value {
         get { storageValue }
         set {
             storageValue = newValue
-            UserDefaults.standard.set(newValue, forKey: key)
+            saveToUserDefaults(newValue)
         }
     }
     
@@ -35,8 +41,15 @@ public struct StikAppStorage<Value>: DynamicProperty {
             get: { self.storageValue },
             set: { newValue in
                 self.storageValue = newValue
-                UserDefaults.standard.set(newValue, forKey: self.key)
+                self.saveToUserDefaults(newValue)
             }
         )
+    }
+    
+    /// Saves the value to UserDefaults, encoding it to JSON.
+    private func saveToUserDefaults(_ value: Value) {
+        if let encoded = try? JSONEncoder().encode(value) {
+            UserDefaults.standard.set(encoded, forKey: key)
+        }
     }
 }
