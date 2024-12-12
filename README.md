@@ -1,10 +1,6 @@
-# **StikAppStorage (WIP)**
+# **StikAppStorage**
 
-<<<<<<< Updated upstream
-StikAppStorage is a work in progress simplified and lightweight SwiftUI property wrapper that makes working with persistent storage (`UserDefaults`) easier and more readable. It provides a clean, SwiftUI-compatible solution for storing and retrieving values seamlessly.
-=======
 A lightweight SwiftUI property wrapper that simplifies persistent storage using `UserDefaults`. StikAppStorage includes built-in **JSON support** for saving and retrieving any `Codable` types, making it perfect for both simple and complex data.
->>>>>>> Stashed changes
 
 ---
 
@@ -33,11 +29,7 @@ https://github.com/0-Blu/StikAppStorage
 
 ## **Usage**
 
-<<<<<<< Updated upstream
-### **Basic Example**
-=======
 ### **1. Basic Types**
->>>>>>> Stashed changes
 
 Storing simple types like `String`, `Bool`, or `Int` is effortless:
 
@@ -66,9 +58,6 @@ struct ContentView: View {
 
 ---
 
-<<<<<<< Updated upstream
-## **Advanced Use Cases**
-=======
 ### **2. Custom Codable Types**
 
 You can store any type conforming to `Codable`:
@@ -102,7 +91,6 @@ struct ContentView: View {
 ---
 
 ### **3. Default Values**
->>>>>>> Stashed changes
 
 If no value exists in `UserDefaults`, the property will fall back to the provided default:
 
